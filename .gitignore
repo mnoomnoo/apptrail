@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Env
+.env
+
+# Data (keep dir, not files)
+job_data/
+
+# Editor
+.DS_Store
+.idea/
+*.swp

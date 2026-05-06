@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: ./backend
+    network_mode: host
+    environment:
+      - DATA_DIR=/data
+      - FRONTEND_ORIGIN=http://localhost
+    volumes:
+      - ~/job_data:/data
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    network_mode: host
+    depends_on:
+      - backend
+    restart: unless-stopped
