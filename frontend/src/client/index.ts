@@ -14,7 +14,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401 && !window.location.pathname.startsWith("/login")) {
+    if (
+      err.response?.status === 401 &&
+      !window.location.pathname.startsWith("/login") &&
+      !window.location.pathname.startsWith("/setup")
+    ) {
       clearToken()
       window.location.href = "/login"
     }

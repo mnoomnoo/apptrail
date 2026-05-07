@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext"
 import { ProtectedRoute } from "./components/ProtectedRoute"
 import { RootLayout } from "./routes/__root"
 import { LoginPage } from "./routes/login"
+import { SetupPage } from "./routes/setup"
 import { JobsPage } from "./routes/jobs"
 import { ResumesPage } from "./routes/resumes"
 import { SettingsPage } from "./routes/settings"
@@ -26,6 +27,7 @@ createRoot(document.getElementById("root")!).render(
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/setup" element={<SetupPage />} />
               <Route
                 element={
                   <ProtectedRoute>

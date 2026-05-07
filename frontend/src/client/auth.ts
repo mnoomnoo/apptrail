@@ -15,6 +15,20 @@ export async function login(username: string, password: string): Promise<TokenRe
   return res.data
 }
 
+export async function checkStatus(): Promise<{ needs_setup: boolean }> {
+  const res = await api.get<{ needs_setup: boolean }>("/auth/status")
+  return res.data
+}
+
+export interface SetupRequest {
+  username: string
+  password: string
+}
+
+export async function setupCredentials(body: SetupRequest): Promise<void> {
+  await api.post("/auth/setup", body)
+}
+
 const TOKEN_KEY = "apptrail_token"
 
 export function getToken(): string | null {

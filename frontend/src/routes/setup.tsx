@@ -1,32 +1,31 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Box, Button, Input, Text, VStack } from "@chakra-ui/react"
-import { checkStatus, login as apiLogin } from "../client/auth"
-import { useAuth } from "../context/AuthContext"
+import { setupCredentials } from "../client/auth"
 import { toaster } from "../components/ui/toaster"
 
-export function LoginPage() {
-  const { login } = useAuth()
+export function SetupPage() {
   const navigate = useNavigate()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [confirm, setConfirm] = useState("")
+  const [confirmError, setConfirmError] = useState("")
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    checkStatus().then(({ needs_setup }) => {
-      if (needs_setup) navigate("/setup", { replace: true })
-    })
-  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (password !== confirm) {
+      setConfirmError("Passwords do not match")
+      return
+    }
+    setConfirmError("")
     setLoading(true)
     try {
-      const { access_token } = await apiLogin(username, password)
-      login(access_token)
-      navigate("/jobs", { replace: true })
+      await setupCredentials({ username, password })
+      toaster.create({ type: "success", title: "Account created — please sign in" })
+      navigate("/login", { replace: true })
     } catch {
-      toaster.create({ type: "error", title: "Invalid username or password" })
+      toaster.create({ type: "error", title: "Setup failed, please try again" })
     } finally {
       setLoading(false)
     }
@@ -47,7 +46,7 @@ export function LoginPage() {
           AppTrail
         </Text>
         <Text color="gray.500" fontSize="sm" mb={6} textAlign="center">
-          Sign in to continue
+          Create your account to get started
         </Text>
         <form onSubmit={handleSubmit}>
           <VStack gap={4}>
@@ -73,12 +72,33 @@ export function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
               />
             </Box>
+            <Box w="full">
+              <Text mb={1} fontSize="sm" color="gray.400">
+                Confirm Password
+              </Text>
+              <Input
+                type="password"
+                value={confirm}
+                onChange={(e) => {
+                  setConfirm(e.target.value)
+                  if (confirmError) setConfirmError("")
+                }}
+                placeholder="••••••••"
+                autoComplete="new-password"
+                required
+              />
+              {confirmError && (
+                <Text mt={1} fontSize="xs" color="red.400">
+                  {confirmError}
+                </Text>
+              )}
+            </Box>
             <Button type="submit" colorPalette="blue" w="full" loading={loading} mt={2}>
-              Sign In
+              Create Account
             </Button>
           </VStack>
         </form>

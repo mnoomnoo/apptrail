@@ -10,10 +10,6 @@ from app.core.storage import ensure_data_dirs
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if not settings.AUTH_SECRET_KEY:
-        raise RuntimeError("AUTH_SECRET_KEY must be set in .env")
-    if not settings.AUTH_PASSWORD_HASH:
-        raise RuntimeError("AUTH_PASSWORD_HASH must be set in .env")
     ensure_data_dirs()
     yield
 
