@@ -5,6 +5,9 @@ services:
     environment:
       - DATA_DIR=/data
       - FRONTEND_ORIGIN=http://localhost
+      - AUTH_USERNAME=${AUTH_USERNAME:-admin}
+      - AUTH_PASSWORD_HASH=${AUTH_PASSWORD_HASH}
+      - AUTH_SECRET_KEY=${AUTH_SECRET_KEY}
     volumes:
       - ~/job_data:/data
     restart: unless-stopped

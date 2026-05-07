@@ -14,7 +14,7 @@ You need two terminals.
 **Terminal 1 — backend**
 ```bash
 cd backend
-uvicorn app.main:app --reload
+uv run python -m uvicorn app.main:app --reload
 ```
 
 **Terminal 2 — frontend**
@@ -44,7 +44,7 @@ docker compose down
 
 Data is stored in `~/job_data` on your host machine — the same location used by the manual setup, so the two approaches share data.
 
-> Environment variables (`DATA_DIR`, `FRONTEND_ORIGIN`) are already configured in `docker-compose.yml`. No `.env` file is needed when using Docker.
+> **Auth credentials are required.** Docker Compose reads `AUTH_PASSWORD_HASH` and `AUTH_SECRET_KEY` from the `.env` file at the project root. Make sure your `.env` contains these values before running `docker compose up`. See the [Authentication](#authentication) section for how to generate them.
 
 ## Configuration
 
@@ -56,6 +56,46 @@ FRONTEND_ORIGIN=http://localhost:5173
 ```
 
 `DATA_DIR` is created automatically on first run. All data lives there — back it up to keep your records.
+
+### Authentication
+
+AppTrail requires a username and password to log in. Credentials are set in `.env` — there is no registration system.
+
+**Initial setup**
+
+Add these three variables to `.env`:
+
+```env
+AUTH_USERNAME=admin
+AUTH_PASSWORD_HASH=<generate below>
+AUTH_SECRET_KEY=<generate below>
+```
+
+Generate a bcrypt hash for your chosen password (run from the `backend/` directory):
+
+```bash
+uv run python -c "import bcrypt; print(bcrypt.hashpw(b'your-password', bcrypt.gensalt()).decode())"
+```
+
+Generate a random secret key for signing tokens:
+
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+**Changing your password**
+
+Re-run the hash command with the new password, paste the output into `AUTH_PASSWORD_HASH` in `.env`, then restart the backend. No database records need updating.
+
+**Token expiry**
+
+Tokens expire after 24 hours — just log in again. To change the window, set `AUTH_TOKEN_EXPIRE_HOURS` in `.env` (e.g. `AUTH_TOKEN_EXPIRE_HOURS=168` for 7 days).
+
+**API access**
+
+All `/api/v1/*` endpoints require `Authorization: Bearer <token>`. Obtain a token by posting to `POST /api/v1/auth/token` with form fields `username` and `password`. Interactive docs at `http://localhost:8000/docs` include an Authorize button for this.
+
+> **Docker:** Add `AUTH_USERNAME`, `AUTH_PASSWORD_HASH`, and `AUTH_SECRET_KEY` to the backend service's `environment:` block in `docker-compose.yml`, or switch to `env_file: - .env` on that service.
 
 ### Changing the frontend port (Docker)
 
