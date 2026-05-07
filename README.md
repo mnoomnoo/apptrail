@@ -57,6 +57,25 @@ FRONTEND_ORIGIN=http://localhost:5173
 
 `DATA_DIR` is created automatically on first run. All data lives there — back it up to keep your records.
 
+### Changing the frontend port (Docker)
+
+The frontend nginx container listens on port 80 by default. To change it:
+
+1. Edit `frontend/nginx.conf` — update the `listen` directive:
+   ```nginx
+   listen 3000;
+   ```
+
+2. Edit `docker-compose.yml` — update `FRONTEND_ORIGIN` on the backend service to match:
+   ```yaml
+   - FRONTEND_ORIGIN=http://localhost:3000
+   ```
+
+3. Rebuild and restart:
+   ```bash
+   docker compose up --build -d
+   ```
+
 ## Features
 
 ### Jobs
