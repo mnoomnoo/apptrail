@@ -15,17 +15,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 
 ALGORITHM = "HS256"
 
-_auth_override: dict | None = None
-
 
 def _auth_file_path() -> Path:
     return settings.DATA_DIR / "auth.json"
 
 
 def get_auth_config() -> dict:
-    """Active credentials. Priority: in-memory override > env vars > auth.json"""
-    if _auth_override is not None:
-        return _auth_override
     if settings.AUTH_PASSWORD_HASH and settings.AUTH_SECRET_KEY:
         return {
             "username": settings.AUTH_USERNAME,
@@ -44,13 +39,11 @@ def needs_setup() -> bool:
 
 
 def complete_setup(username: str, password_hash: str, secret_key: str) -> None:
-    global _auth_override
     data = {"username": username, "password_hash": password_hash, "secret_key": secret_key}
     path = _auth_file_path()
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(data, indent=2), encoding="utf-8")
     os.replace(tmp, path)
-    _auth_override = data
 
 
 def verify_password(plain: str, hashed: str) -> bool:
