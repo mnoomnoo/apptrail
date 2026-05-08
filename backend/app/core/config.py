@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     DATA_DIR: Path = Path("./data")
     FRONTEND_ORIGIN: str = "http://localhost:5173"
     API_PREFIX: str = "/api/v1"
+    AUTH_USERNAME: str = "admin"
+    AUTH_PASSWORD_HASH: str = ""
+    AUTH_SECRET_KEY: str = ""
+    AUTH_TOKEN_EXPIRE_HOURS: int = 24
 
 
 settings = Settings()
