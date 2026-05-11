@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react"
 import { LuExternalLink, LuPencil, LuPlus, LuTrash2 } from "react-icons/lu"
 import { Dialog } from "../../components/ui/dialog"
+import { Tooltip } from "../../components/ui/tooltip"
 import { toaster } from "../../components/ui/toaster"
 import { useCreateJob, useDeleteJob, useJobs, useUpdateJob } from "../../hooks/useJobs"
 import { useResumes, useCreateResume } from "../../hooks/useResumes"
@@ -451,16 +452,31 @@ export function JobsPage() {
             {jobs.map((j) => (
               <Table.Row key={j.id}>
                 <Table.Cell fontWeight="medium" color="white">
-                  <HStack gap={1}>
-                    {j.url ? (
-                      <a href={j.url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        {j.company}
-                        <LuExternalLink size={12} />
-                      </a>
-                    ) : (
-                      j.company
-                    )}
-                  </HStack>
+                  {j.notes ? (
+                    <Tooltip content={j.notes}>
+                      <HStack gap={1} display="inline-flex">
+                        {j.url ? (
+                          <a href={j.url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                            {j.company}
+                            <LuExternalLink size={12} />
+                          </a>
+                        ) : (
+                          <span>{j.company}</span>
+                        )}
+                      </HStack>
+                    </Tooltip>
+                  ) : (
+                    <HStack gap={1}>
+                      {j.url ? (
+                        <a href={j.url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                          {j.company}
+                          <LuExternalLink size={12} />
+                        </a>
+                      ) : (
+                        j.company
+                      )}
+                    </HStack>
+                  )}
                 </Table.Cell>
                 <Table.Cell color="gray.300">{j.title}</Table.Cell>
                 <Table.Cell color="gray.500" fontSize="xs">{JOB_SOURCE_LABELS[j.source]}</Table.Cell>

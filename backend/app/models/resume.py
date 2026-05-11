@@ -28,6 +28,7 @@ class ResumeBase(BaseModel):
     degree_field: Optional[str] = None
     school: Optional[str] = None
     graduation_year: Optional[int] = None
+    notes: Optional[str] = None
 
 
 class ResumeCreate(ResumeBase):
@@ -48,6 +49,7 @@ class ResumeUpdate(BaseModel):
     degree_field: Optional[str] = None
     school: Optional[str] = None
     graduation_year: Optional[int] = None
+    notes: Optional[str] = None
 
 
 class ResumeRecord(ResumeBase):

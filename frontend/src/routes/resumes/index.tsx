@@ -22,6 +22,7 @@ import {
   LuX,
 } from "react-icons/lu"
 import { Dialog } from "../../components/ui/dialog"
+import { Tooltip } from "../../components/ui/tooltip"
 import { toaster } from "../../components/ui/toaster"
 import {
   useCreateResume,
@@ -95,6 +96,7 @@ function ResumeFormDialog({
   const [graduationYear, setGraduationYear] = useState(
     editing?.graduation_year ? String(editing.graduation_year) : ""
   )
+  const [notes, setNotes] = useState(editing?.notes ?? "")
   const [isDragOver, setIsDragOver] = useState(false)
   const [isExtracting, setIsExtracting] = useState(false)
 
@@ -114,6 +116,7 @@ function ResumeFormDialog({
     setDegreeField(editing?.degree_field ?? "")
     setSchool(editing?.school ?? "")
     setGraduationYear(editing?.graduation_year ? String(editing.graduation_year) : "")
+    setNotes(editing?.notes ?? "")
     setIsDragOver(false)
     setIsExtracting(false)
   }, [open, editing])
@@ -135,6 +138,7 @@ function ResumeFormDialog({
     setDegreeField(editing?.degree_field ?? "")
     setSchool(editing?.school ?? "")
     setGraduationYear(editing?.graduation_year ? String(editing.graduation_year) : "")
+    setNotes(editing?.notes ?? "")
     setIsDragOver(false)
     setIsExtracting(false)
   }
@@ -204,6 +208,7 @@ function ResumeFormDialog({
       degree_field: degreeField.trim() || null,
       school: school.trim() || null,
       graduation_year: graduationYear ? parseInt(graduationYear, 10) : null,
+      notes: notes.trim() || null,
     }
 
     try {
@@ -314,6 +319,16 @@ function ResumeFormDialog({
               value={professionalStatement}
               onChange={(e) => setProfessionalStatement(e.target.value)}
               placeholder="Brief summary of your expertise, background, and career goals…"
+              rows={3}
+            />
+          </Box>
+
+          <Box>
+            <Text mb={1} fontSize="sm" color="gray.400">Private Notes</Text>
+            <Textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Where you've used this resume, unique tailoring notes…"
               rows={3}
             />
           </Box>
@@ -701,7 +716,11 @@ export function ResumesPage() {
               return (
                 <Table.Row key={r.id}>
                   <Table.Cell fontWeight="medium" color="white">
-                    {r.name}
+                    {r.notes ? (
+                      <Tooltip content={r.notes}><span>{r.name}</span></Tooltip>
+                    ) : (
+                      r.name
+                    )}
                   </Table.Cell>
                   <Table.Cell color="gray.400">{r.email ?? "—"}</Table.Cell>
                   <Table.Cell>
