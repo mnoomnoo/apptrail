@@ -471,7 +471,7 @@ export function JobsPage() {
                     : "—"}
                 </Table.Cell>
                 <Table.Cell color="gray.500" fontSize="xs">
-                  {j.applied_at ? new Date(j.applied_at).toLocaleDateString() : "—"}
+                  {j.applied_at ? new Date(j.applied_at).toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" }) : "—"}
                 </Table.Cell>
                 <Table.Cell>
                   <HStack justify="flex-end" gap={1}>

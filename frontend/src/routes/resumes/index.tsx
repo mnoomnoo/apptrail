@@ -710,7 +710,7 @@ export function ResumesPage() {
                     </Badge>
                   </Table.Cell>
                   <Table.Cell color="gray.500" fontSize="xs">
-                    {new Date(r.created_at).toLocaleDateString()}
+                    {new Date(r.created_at + 'Z').toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}
                   </Table.Cell>
                   <Table.Cell>
                     <HStack justify="flex-end" gap={1}>
