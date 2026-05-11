@@ -42,6 +42,11 @@ export function SetupPage() {
         w="full"
         maxW="360px"
       >
+        <img
+          src="/favicon.svg"
+          alt="AppTrail"
+          style={{ display: "block", margin: "0 auto 8px", width: "48px", height: "48px" }}
+        />
         <Text fontWeight="bold" fontSize="2xl" color="white" mb={1} textAlign="center">
           AppTrail
         </Text>
