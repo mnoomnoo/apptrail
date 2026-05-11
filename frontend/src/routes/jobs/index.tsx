@@ -6,6 +6,7 @@ import {
   Button,
   Flex,
   HStack,
+  IconButton,
   Input,
   NativeSelect,
   Skeleton,
@@ -214,12 +215,23 @@ function JobFormDialog({ open, onClose, editing, resumes }: JobFormDialogProps) 
           </HStack>
           <Box>
             <Text mb={1} fontSize="sm" color="gray.400">Job URL</Text>
-            <Input
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://..."
-              type="url"
-            />
+            <HStack gap={2}>
+              <Input
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://..."
+                type="url"
+              />
+              <IconButton
+                aria-label="Open URL"
+                variant="ghost"
+                size="sm"
+                disabled={!url}
+                onClick={() => window.open(url, "_blank", "noreferrer")}
+              >
+                <LuExternalLink />
+              </IconButton>
+            </HStack>
           </Box>
           <HStack gap={4}>
             <Box flex={1}>
