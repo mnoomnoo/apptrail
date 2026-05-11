@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 import {
   Badge,
@@ -90,6 +90,20 @@ function JobFormDialog({ open, onClose, editing, resumes }: JobFormDialogProps) 
   const [resumeMode, setResumeMode] = useState<"existing" | "new">("existing")
 
   const busy = createJob.isPending || updateJob.isPending || createResume.isPending
+
+  useEffect(() => {
+    if (!open) return
+    setUrl(editing?.url ?? "")
+    setCompany(editing?.company ?? "")
+    setTitle(editing?.title ?? "")
+    setDescription(editing?.description ?? "")
+    setNotes(editing?.notes ?? "")
+    setSource(editing?.source ?? "other")
+    setStatus(editing?.status ?? "saved")
+    setResumeId(editing?.resume_id ?? "")
+    setNewResumeName("")
+    setResumeMode("existing")
+  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function reset() {
     setUrl(editing?.url ?? "")
