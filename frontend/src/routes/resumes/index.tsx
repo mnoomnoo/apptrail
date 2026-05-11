@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   Badge,
   Box,
@@ -97,6 +97,26 @@ function ResumeFormDialog({
   )
   const [isDragOver, setIsDragOver] = useState(false)
   const [isExtracting, setIsExtracting] = useState(false)
+
+  useEffect(() => {
+    if (!open) return
+    setName(editing?.name ?? "")
+    setEmail(editing?.email ?? "")
+    setPhone(editing?.phone ?? "")
+    setLinkedinUrl(editing?.linkedin_url ?? "")
+    setGithubUrl(editing?.github_url ?? "")
+    setStatus(editing?.status ?? "active")
+    setProfessionalStatement(editing?.professional_statement ?? "")
+    setWorkExperiences(experiencesFromRecord(editing))
+    setSkills(editing?.skills ?? [])
+    setSkillInput("")
+    setDegreeType(editing?.degree_type ?? "")
+    setDegreeField(editing?.degree_field ?? "")
+    setSchool(editing?.school ?? "")
+    setGraduationYear(editing?.graduation_year ? String(editing.graduation_year) : "")
+    setIsDragOver(false)
+    setIsExtracting(false)
+  }, [open, editing])
 
   const busy = createMutation.isPending || updateMutation.isPending
 
