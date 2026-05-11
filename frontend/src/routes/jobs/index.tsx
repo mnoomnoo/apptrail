@@ -103,7 +103,7 @@ function JobFormDialog({ open, onClose, editing, resumes }: JobFormDialogProps) 
     setResumeId(editing?.resume_id ?? "")
     setNewResumeName("")
     setResumeMode("existing")
-  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, editing])
 
   function reset() {
     setUrl(editing?.url ?? "")
