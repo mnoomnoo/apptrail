@@ -5,6 +5,8 @@
       <stop offset="100%" stop-color="#47bfff"/>
     </linearGradient>
   </defs>
+  <!-- Dark rounded-square background for home screen / PWA use -->
+  <rect width="512" height="512" rx="112" fill="#0d1117"/>
   <!-- Trail path: lower-left (start) curving up to upper-right (goal) -->
   <path d="M 130,380 C 150,210 360,290 380,130"
         stroke="url(#g)" stroke-width="44" stroke-linecap="round" fill="none"/>

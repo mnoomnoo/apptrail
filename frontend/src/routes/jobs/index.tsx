@@ -6,6 +6,7 @@ import {
   Button,
   Flex,
   HStack,
+  IconButton,
   Input,
   NativeSelect,
   Skeleton,
@@ -16,6 +17,7 @@ import {
 } from "@chakra-ui/react"
 import { LuExternalLink, LuPencil, LuPlus, LuTrash2 } from "react-icons/lu"
 import { Dialog } from "../../components/ui/dialog"
+import { Tooltip } from "../../components/ui/tooltip"
 import { toaster } from "../../components/ui/toaster"
 import { useCreateJob, useDeleteJob, useJobs, useUpdateJob } from "../../hooks/useJobs"
 import { useResumes, useCreateResume } from "../../hooks/useResumes"
@@ -213,12 +215,23 @@ function JobFormDialog({ open, onClose, editing, resumes }: JobFormDialogProps) 
           </HStack>
           <Box>
             <Text mb={1} fontSize="sm" color="gray.400">Job URL</Text>
-            <Input
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://..."
-              type="url"
-            />
+            <HStack gap={2}>
+              <Input
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://..."
+                type="url"
+              />
+              <IconButton
+                aria-label="Open URL"
+                variant="ghost"
+                size="sm"
+                disabled={!url}
+                onClick={() => window.open(url, "_blank", "noreferrer")}
+              >
+                <LuExternalLink />
+              </IconButton>
+            </HStack>
           </Box>
           <HStack gap={4}>
             <Box flex={1}>
@@ -451,16 +464,31 @@ export function JobsPage() {
             {jobs.map((j) => (
               <Table.Row key={j.id}>
                 <Table.Cell fontWeight="medium" color="white">
-                  <HStack gap={1}>
-                    {j.url ? (
-                      <a href={j.url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        {j.company}
-                        <LuExternalLink size={12} />
-                      </a>
-                    ) : (
-                      j.company
-                    )}
-                  </HStack>
+                  {j.notes ? (
+                    <Tooltip content={j.notes}>
+                      <HStack gap={1} display="inline-flex">
+                        {j.url ? (
+                          <a href={j.url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                            {j.company}
+                            <LuExternalLink size={12} />
+                          </a>
+                        ) : (
+                          <span>{j.company}</span>
+                        )}
+                      </HStack>
+                    </Tooltip>
+                  ) : (
+                    <HStack gap={1}>
+                      {j.url ? (
+                        <a href={j.url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                          {j.company}
+                          <LuExternalLink size={12} />
+                        </a>
+                      ) : (
+                        j.company
+                      )}
+                    </HStack>
+                  )}
                 </Table.Cell>
                 <Table.Cell color="gray.300">{j.title}</Table.Cell>
                 <Table.Cell color="gray.500" fontSize="xs">{JOB_SOURCE_LABELS[j.source]}</Table.Cell>
@@ -471,7 +499,7 @@ export function JobsPage() {
                     : "—"}
                 </Table.Cell>
                 <Table.Cell color="gray.500" fontSize="xs">
-                  {j.applied_at ? new Date(j.applied_at).toLocaleDateString() : "—"}
+                  {j.applied_at ? new Date(j.applied_at).toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" }) : "—"}
                 </Table.Cell>
                 <Table.Cell>
                   <HStack justify="flex-end" gap={1}>

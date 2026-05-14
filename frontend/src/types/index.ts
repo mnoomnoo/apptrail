@@ -68,6 +68,7 @@ export interface ResumeRecord {
   degree_field: string | null
   school: string | null
   graduation_year: number | null
+  notes: string | null
   created_at: string
   updated_at: string
 }
@@ -91,6 +92,7 @@ export interface ResumeCreate {
   degree_field?: string | null
   school?: string | null
   graduation_year?: number | null
+  notes?: string | null
 }
 
 export interface ResumeUpdate {
@@ -107,6 +109,7 @@ export interface ResumeUpdate {
   degree_field?: string | null
   school?: string | null
   graduation_year?: number | null
+  notes?: string | null
 }
 
 export interface JobRecord {

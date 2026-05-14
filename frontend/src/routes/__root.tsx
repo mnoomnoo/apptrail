@@ -15,9 +15,12 @@ export function RootLayout() {
     <Box minH="100vh" bg="gray.950">
       <Box as="nav" bg="gray.900" borderBottomWidth="1px" borderColor="gray.800" px={6} py={3}>
         <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
-          <Text fontWeight="bold" fontSize="lg" color="white" letterSpacing="tight">
-            AppTrail
-          </Text>
+          <HStack gap={2}>
+            <img src="/favicon.svg" alt="" width="24" height="24" />
+            <Text fontWeight="bold" fontSize="lg" color="white" letterSpacing="tight">
+              AppTrail
+            </Text>
+          </HStack>
           <HStack gap={6}>
             <NavLink to="/jobs">
               {({ isActive }) => (

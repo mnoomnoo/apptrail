@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   Badge,
   Box,
@@ -95,8 +95,30 @@ function ResumeFormDialog({
   const [graduationYear, setGraduationYear] = useState(
     editing?.graduation_year ? String(editing.graduation_year) : ""
   )
+  const [notes, setNotes] = useState(editing?.notes ?? "")
   const [isDragOver, setIsDragOver] = useState(false)
   const [isExtracting, setIsExtracting] = useState(false)
+
+  useEffect(() => {
+    if (!open) return
+    setName(editing?.name ?? "")
+    setEmail(editing?.email ?? "")
+    setPhone(editing?.phone ?? "")
+    setLinkedinUrl(editing?.linkedin_url ?? "")
+    setGithubUrl(editing?.github_url ?? "")
+    setStatus(editing?.status ?? "active")
+    setProfessionalStatement(editing?.professional_statement ?? "")
+    setWorkExperiences(experiencesFromRecord(editing))
+    setSkills(editing?.skills ?? [])
+    setSkillInput("")
+    setDegreeType(editing?.degree_type ?? "")
+    setDegreeField(editing?.degree_field ?? "")
+    setSchool(editing?.school ?? "")
+    setGraduationYear(editing?.graduation_year ? String(editing.graduation_year) : "")
+    setNotes(editing?.notes ?? "")
+    setIsDragOver(false)
+    setIsExtracting(false)
+  }, [open, editing])
 
   const busy = createMutation.isPending || updateMutation.isPending
 
@@ -115,6 +137,7 @@ function ResumeFormDialog({
     setDegreeField(editing?.degree_field ?? "")
     setSchool(editing?.school ?? "")
     setGraduationYear(editing?.graduation_year ? String(editing.graduation_year) : "")
+    setNotes(editing?.notes ?? "")
     setIsDragOver(false)
     setIsExtracting(false)
   }
@@ -157,7 +180,7 @@ function ResumeFormDialog({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!name.trim()) return
+    if (!name.trim() || !notes.trim()) return
 
     const cleanedExperiences = workExperiences
       .filter((e) =>
@@ -184,6 +207,7 @@ function ResumeFormDialog({
       degree_field: degreeField.trim() || null,
       school: school.trim() || null,
       graduation_year: graduationYear ? parseInt(graduationYear, 10) : null,
+      notes: notes.trim(),
     }
 
     try {
@@ -220,6 +244,21 @@ function ResumeFormDialog({
     >
       <form id="resume-form" onSubmit={handleSubmit}>
         <VStack gap={4} align="stretch">
+
+          <Box>
+            <Text mb={1} fontSize="sm" fontWeight="semibold" color="white">
+              Notes <Text as="span" color="red.400">*</Text>
+            </Text>
+            <Textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="What this resume is tailored for, where you've sent it…"
+              rows={3}
+              required
+            />
+          </Box>
+
+          <Separator borderColor="gray.700" />
 
           {/* ── Contact ── */}
           <HStack gap={3} align="flex-start">
@@ -668,8 +707,7 @@ export function ResumesPage() {
         <Table.Root size="sm" variant="line">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>Name</Table.ColumnHeader>
-              <Table.ColumnHeader>Email</Table.ColumnHeader>
+              <Table.ColumnHeader>Notes</Table.ColumnHeader>
               <Table.ColumnHeader>Status</Table.ColumnHeader>
               <Table.ColumnHeader>Created</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="right">Actions</Table.ColumnHeader>
@@ -680,17 +718,14 @@ export function ResumesPage() {
               const statusKey = r.status ?? "active"
               return (
                 <Table.Row key={r.id}>
-                  <Table.Cell fontWeight="medium" color="white">
-                    {r.name}
-                  </Table.Cell>
-                  <Table.Cell color="gray.400">{r.email ?? "—"}</Table.Cell>
+                  <Table.Cell color="gray.400" fontSize="sm">{r.notes ?? "—"}</Table.Cell>
                   <Table.Cell>
                     <Badge colorPalette={RESUME_STATUS_COLORS[statusKey]} size="sm">
                       {RESUME_STATUS_LABELS[statusKey]}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell color="gray.500" fontSize="xs">
-                    {new Date(r.created_at).toLocaleDateString()}
+                    {new Date(r.created_at + 'Z').toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}
                   </Table.Cell>
                   <Table.Cell>
                     <HStack justify="flex-end" gap={1}>

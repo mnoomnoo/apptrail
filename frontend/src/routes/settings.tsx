@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import { Box, Button, HStack, Input, Text, VStack } from "@chakra-ui/react"
+import pkg from "../../package.json"
 import { generateCredentials } from "../client/auth"
 import { useAuth } from "../context/AuthContext"
 import { toaster } from "../components/ui/toaster"
@@ -151,6 +152,14 @@ export function SettingsPage() {
       <VStack gap={6} align="stretch" maxW="600px">
         <ChangePasswordSection />
         <RegenerateKeySection />
+        <Box bg="gray.900" borderWidth="1px" borderColor="gray.800" borderRadius="xl" p={6}>
+          <Text fontWeight="semibold" fontSize="lg" color="white" mb={1}>
+            About
+          </Text>
+          <Text fontSize="sm" color="gray.500">
+            AppTrail v{pkg.version}
+          </Text>
+        </Box>
       </VStack>
     </Box>
   )
